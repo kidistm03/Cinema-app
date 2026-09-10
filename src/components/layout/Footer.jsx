@@ -4,6 +4,7 @@ function Footer() {
       <p>
         © 2026 Cinema App. Built with React, Tailwind CSS & TMDB.
       </p>
+      
     </footer>
   )
 }
