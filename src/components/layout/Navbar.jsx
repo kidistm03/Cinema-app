@@ -7,7 +7,7 @@ function Navbar() {
         <div className="flex items-center justify-between h-16">
 
           <Link to="/" className="text-2xl font-bold text-red-500">
-            🎬 Cinema
+            Cinema
           </Link>
 
           <div className="flex items-center gap-6">
@@ -36,7 +36,7 @@ function Navbar() {
               to="/watchlist"
               className="text-gray-300 hover:text-white transition"
             >
-              ❤️ Watchlist
+              Watchlist
             </Link>
           </div>
 
