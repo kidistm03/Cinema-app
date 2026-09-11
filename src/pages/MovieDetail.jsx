@@ -8,6 +8,7 @@ function MovieDetail() {
   const { id } = useParams()
 
   const [movie, setMovie] = useState(null)
+  const [cast, setCast] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
@@ -36,6 +37,24 @@ function MovieDetail() {
         const data = await response.json()
 
         setMovie(data)
+        const creditsResponse = await fetch(
+          `${BASE_URL}/movie/${id}/credits`,
+          {
+            headers: {
+              Authorization: `Bearer ${KEY}`,
+            },
+            signal: controller.signal,
+          }
+        )
+
+        if (!creditsResponse.ok) {
+          throw new Error('Failed to fetch cast')
+        }
+
+        const creditsData = await creditsResponse.json()
+
+        setCast(creditsData.cast.slice(0, 10))
+
       } catch (error) {
         if (error.name !== 'AbortError') {
           setError(error.message)
@@ -124,6 +143,36 @@ function MovieDetail() {
             <p className="text-gray-300 leading-7">
               {movie.overview}
             </p>
+            <h2 className="text-2xl font-bold mt-10 mb-4">
+              Cast
+            </h2>
+
+            <div className="flex gap-4 overflow-x-auto pb-4">
+              {cast.map((person) => (
+                <div
+                  key={person.id}
+                  className="min-w-[120px] w-[120px]"
+                >
+                  <img
+                    src={
+                      person.profile_path
+                        ? `https://image.tmdb.org/t/p/w185${person.profile_path}`
+                        : 'https://via.placeholder.com/185x278?text=No+Image'
+                    }
+                    alt={person.name}
+                    className="w-full aspect-[2/3] object-cover rounded-lg"
+                  />
+
+                  <h3 className="text-sm font-semibold text-white mt-2">
+                    {person.name}
+                  </h3>
+
+                  <p className="text-xs text-gray-400">
+                    {person.character}
+                  </p>
+                </div>
+              ))}
+            </div>
 
           </div>
 
