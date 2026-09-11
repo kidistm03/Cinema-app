@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import GenreFilter from '../components/ui/GenreFilter'
 import MovieGrid from '../components/movie/MovieGrid'
 import SkeletonCard from '../components/movie/SkeletonCard'
+import SortSelect from '../components/ui/SortSelect'
 
 const KEY = import.meta.env.VITE_TMDB_KEY
 const BASE_URL = 'https://api.themoviedb.org/3'
@@ -10,7 +11,7 @@ function Browse() {
   const [genres, setGenres] = useState([])
   const [movies, setMovies] = useState([])
   const [selectedGenre, setSelectedGenre] = useState(null)
-
+  const [sortBy, setSortBy] = useState('popularity.desc')
   const [genresLoading, setGenresLoading] = useState(true)
   const [moviesLoading, setMoviesLoading] = useState(true)
 
@@ -67,10 +68,10 @@ function Browse() {
         setMoviesLoading(true)
         setError(null)
 
-        let endpoint = '/discover/movie'
+        let endpoint = `/discover/movie?sort_by=${sortBy}`
 
         if (selectedGenre) {
-          endpoint += `?with_genres=${selectedGenre}`
+          endpoint += `&with_genres=${selectedGenre}`
         }
 
         const response = await fetch(
@@ -106,7 +107,7 @@ function Browse() {
     return () => {
       controller.abort()
     }
-  }, [selectedGenre])
+  }, [selectedGenre, sortBy])
 
   return (
     <main className="min-h-screen bg-zinc-950 text-white pt-24 px-4 sm:px-6 lg:px-8">
@@ -117,11 +118,20 @@ function Browse() {
         </h1>
 
         {!genresLoading && !error && (
-          <GenreFilter
-            genres={genres}
-            selectedGenre={selectedGenre}
-            onSelectGenre={setSelectedGenre}
-          />
+          <>
+            <GenreFilter
+              genres={genres}
+              selectedGenre={selectedGenre}
+              onSelectGenre={setSelectedGenre}
+            />
+
+            <div className="mt-4 flex justify-end">
+              <SortSelect
+                sortBy={sortBy}
+                onSortChange={setSortBy}
+              />
+            </div>
+          </>
         )}
 
         <div className="mt-8">
