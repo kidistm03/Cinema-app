@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import MovieCard from '../components/movie/MovieCard'
+import TrailerModal from '../components/movie/TrailerModal'
 
 const KEY = import.meta.env.VITE_TMDB_KEY
 const BASE_URL = 'https://api.themoviedb.org/3'
@@ -14,6 +15,7 @@ function MovieDetail() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [trailerKey, setTrailerKey] = useState(null)
+  const [showTrailer, setShowTrailer] = useState(false)
 
   useEffect(() => {
     const controller = new AbortController()
@@ -183,6 +185,14 @@ function MovieDetail() {
 
             <p className="text-gray-300 leading-7">
               {movie.overview}
+              {trailerKey && (
+  <button
+    onClick={() => setShowTrailer(true)}
+    className="mt-6 rounded-lg bg-red-600 px-6 py-3 font-semibold text-white transition hover:bg-red-700"
+  >
+    ▶ Watch Trailer
+  </button>
+)}
             </p>
             <h2 className="text-2xl font-bold mt-10 mb-4">
               Cast
@@ -233,6 +243,10 @@ function MovieDetail() {
         </div>
 
       </div>
+      <TrailerModal
+  videoKey={showTrailer ? trailerKey : null}
+  onClose={() => setShowTrailer(false)}
+/>
     </main>
   )
 }
