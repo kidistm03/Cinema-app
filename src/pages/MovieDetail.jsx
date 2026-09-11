@@ -72,6 +72,7 @@ function MovieDetail() {
 
         const similarData = await similarResponse.json()
         setSimilarMovies(similarData.results)
+
         const videosResponse = await fetch(
           `${BASE_URL}/movie/${id}/videos`,
           {
