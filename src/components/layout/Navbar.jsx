@@ -10,31 +10,31 @@ function Navbar() {
             Cinema
           </Link>
 
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-3 sm:gap-6 overflow-x-auto">
             <Link
               to="/"
-              className="text-gray-300 hover:text-white transition"
+              className="text-sm sm:text-base text-gray-300 hover:text-white transition whitespace-nowrap"
             >
               Home
             </Link>
 
             <Link
               to="/browse"
-              className="text-gray-300 hover:text-white transition"
+              className="text-sm sm:text-base text-gray-300 hover:text-white transition whitespace-nowrap"
             >
               Movies
             </Link>
 
             <Link
               to="/search"
-              className="text-gray-300 hover:text-white transition"
+              className="text-sm sm:text-base text-gray-300 hover:text-white transition whitespace-nowrap"
             >
               Search
             </Link>
 
             <Link
               to="/watchlist"
-              className="text-gray-300 hover:text-white transition"
+              className="text-sm sm:text-base text-gray-300 hover:text-white transition whitespace-nowrap"
             >
               Watchlist
             </Link>
