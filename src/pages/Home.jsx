@@ -1,6 +1,7 @@
 import useMovies from '../hooks/useMovies'
 import MovieRow from '../components/movie/MovieRow'
 import SkeletonCard from '../components/movie/SkeletonCard'
+import HeroBanner from '../components/movie/HeroBanner'
 
 function Home() {
   const trending = useMovies('/trending/movie/week')
@@ -46,9 +47,11 @@ function Home() {
   }
 
   return (
-    <main className="min-h-screen bg-zinc-950 text-white pt-24 px-4 sm:px-6 lg:px-8">
+    <main className="min-h-screen bg-zinc-950 text-white">
 
-      <div className="max-w-7xl mx-auto">
+      <HeroBanner movie={trending.movies[0]} />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10">
 
         <MovieRow
           title="Trending This Week"
