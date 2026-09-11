@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import GenreFilterSkeleton from '../components/ui/GenreFilterSkeleton'
 import GenreFilter from '../components/ui/GenreFilter'
 import MovieGrid from '../components/movie/MovieGrid'
 import SkeletonCard from '../components/movie/SkeletonCard'
@@ -116,6 +117,8 @@ function Browse() {
         <h1 className="text-3xl sm:text-4xl font-bold mb-8">
           Browse Movies
         </h1>
+
+        {genresLoading && <GenreFilterSkeleton />}
 
         {!genresLoading && !error && (
           <>
