@@ -13,6 +13,7 @@ function MovieDetail() {
   const [similarMovies, setSimilarMovies] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [trailerKey, setTrailerKey] = useState(null)
 
   useEffect(() => {
     const controller = new AbortController()
@@ -70,8 +71,30 @@ function MovieDetail() {
         }
 
         const similarData = await similarResponse.json()
-
         setSimilarMovies(similarData.results)
+        const videosResponse = await fetch(
+          `${BASE_URL}/movie/${id}/videos`,
+          {
+            headers: {
+              Authorization: `Bearer ${KEY}`,
+            },
+            signal: controller.signal,
+          }
+        )
+
+        if (!videosResponse.ok) {
+          throw new Error('Failed to fetch videos')
+        }
+
+        const videosData = await videosResponse.json()
+
+        const trailer = videosData.results.find(
+          (video) =>
+            video.type === 'Trailer' &&
+            video.site === 'YouTube'
+        )
+
+        setTrailerKey(trailer?.key || null)
       } catch (error) {
         if (error.name !== 'AbortError') {
           setError(error.message)
