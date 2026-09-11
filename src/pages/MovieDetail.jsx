@@ -75,16 +75,59 @@ function MovieDetail() {
   }
 
   return (
-    <main className="min-h-screen bg-zinc-950 text-white pt-24 px-4">
+    <main className="min-h-screen bg-zinc-950 text-white pt-24 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
 
-        <h1 className="text-4xl font-bold">
-          {movie.title}
-        </h1>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
 
-        <p className="mt-4 text-gray-400">
-          {movie.overview}
-        </p>
+          <div>
+            <img
+              src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+              alt={movie.title}
+              className="w-full max-w-sm mx-auto rounded-xl shadow-2xl"
+            />
+          </div>
+
+          <div className="md:col-span-2">
+
+            <h1 className="text-4xl sm:text-5xl font-bold">
+              {movie.title}
+            </h1>
+
+            <div className="flex flex-wrap items-center gap-4 mt-4">
+
+              <span className="text-yellow-400 font-bold">
+                ⭐ {movie.vote_average.toFixed(1)}
+              </span>
+
+              <span className="text-gray-400">
+                {movie.release_date?.slice(0, 4)}
+              </span>
+
+            </div>
+
+            <div className="flex flex-wrap gap-2 mt-5">
+              {movie.genres?.map((genre) => (
+                <span
+                  key={genre.id}
+                  className="rounded-full bg-zinc-800 px-3 py-1 text-sm text-gray-300"
+                >
+                  {genre.name}
+                </span>
+              ))}
+            </div>
+
+            <h2 className="text-2xl font-bold mt-8 mb-3">
+              Overview
+            </h2>
+
+            <p className="text-gray-300 leading-7">
+              {movie.overview}
+            </p>
+
+          </div>
+
+        </div>
 
       </div>
     </main>
