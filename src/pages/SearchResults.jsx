@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom'
 import useDebounce from '../hooks/useDebounce'
 import MovieGrid from '../components/movie/MovieGrid'
 import SkeletonCard from '../components/movie/SkeletonCard'
+import PersonGrid from '../components/people/PersonGrid'
 
 const KEY = import.meta.env.VITE_TMDB_KEY
 const BASE_URL = 'https://api.themoviedb.org/3'
@@ -139,34 +140,7 @@ function SearchResults() {
                   Celebrities
                 </h2>
 
-                <div className="grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-                  {celebrities.map((person) => (
-                    <div
-                      key={person.id}
-                      className="rounded-lg bg-zinc-900 p-4 text-center transition hover:scale-105"
-                    >
-                      {person.profile_path ? (
-                        <img
-                          src={`https://image.tmdb.org/t/p/w500${person.profile_path}`}
-                          alt={person.name}
-                          className="mx-auto mb-4 aspect-[2/3] w-full rounded-lg object-cover"
-                        />
-                      ) : (
-                        <div className="mb-4 flex aspect-[2/3] items-center justify-center rounded-lg bg-zinc-800 text-5xl">
-                          👤
-                        </div>
-                      )}
-
-                      <h3 className="font-bold">
-                        {person.name}
-                      </h3>
-
-                      <p className="mt-1 text-sm text-gray-400">
-                        Celebrity
-                      </p>
-                    </div>
-                  ))}
-                </div>
+                <PersonGrid people={celebrities} />
               </section>
             )}
 

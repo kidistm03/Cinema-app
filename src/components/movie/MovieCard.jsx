@@ -12,6 +12,14 @@ function MovieCard({ movie }) {
     ? date.slice(0, 4)
     : 'N/A'
 
+  const isSeries = movie.media_type
+    ? movie.media_type === 'tv'
+    : 'first_air_date' in movie
+
+  const detailPath = isSeries
+    ? `/series/${movie.id}`
+    : `/movie/${movie.id}`
+
   const {
     addToWatchlist,
     removeFromWatchlist,
@@ -44,7 +52,7 @@ function MovieCard({ movie }) {
         {saved ? '❤️' : '🤍'}
       </button>
 
-      <Link to={`/movie/${movie.id}`}>
+      <Link to={detailPath}>
         <img
           src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
           alt={title}

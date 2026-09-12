@@ -30,6 +30,20 @@ function Navbar() {
             </Link>
 
             <Link
+              to="/series"
+              className="text-sm sm:text-base text-gray-300 hover:text-white transition whitespace-nowrap"
+            >
+              Series
+            </Link>
+
+            <Link
+              to="/celebrities"
+              className="text-sm sm:text-base text-gray-300 hover:text-white transition whitespace-nowrap"
+            >
+              Celebrities
+            </Link>
+
+            <Link
               to="/search"
               className="text-sm sm:text-base text-gray-300 hover:text-white transition whitespace-nowrap"
             >

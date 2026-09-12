@@ -1,0 +1,267 @@
+import { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
+import MovieCard from '../components/movie/MovieCard'
+import TrailerModal from '../components/movie/TrailerModal'
+
+const KEY = import.meta.env.VITE_TMDB_KEY
+const BASE_URL = 'https://api.themoviedb.org/3'
+
+function SeriesDetail() {
+  const { id } = useParams()
+
+  const [series, setSeries] = useState(null)
+  const [cast, setCast] = useState([])
+  const [similarSeries, setSimilarSeries] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+  const [trailerKey, setTrailerKey] = useState(null)
+  const [showTrailer, setShowTrailer] = useState(false)
+
+  useEffect(() => {
+    const controller = new AbortController()
+
+    async function fetchSeries() {
+      try {
+        setLoading(true)
+        setError(null)
+
+        const response = await fetch(
+          `${BASE_URL}/tv/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${KEY}`,
+            },
+            signal: controller.signal,
+          }
+        )
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch series')
+        }
+
+        const data = await response.json()
+
+        setSeries(data)
+
+        const creditsResponse = await fetch(
+          `${BASE_URL}/tv/${id}/credits`,
+          {
+            headers: {
+              Authorization: `Bearer ${KEY}`,
+            },
+            signal: controller.signal,
+          }
+        )
+
+        if (!creditsResponse.ok) {
+          throw new Error('Failed to fetch cast')
+        }
+
+        const creditsData = await creditsResponse.json()
+        setCast(creditsData.cast.slice(0, 10))
+
+        const similarResponse = await fetch(
+          `${BASE_URL}/tv/${id}/similar`,
+          {
+            headers: {
+              Authorization: `Bearer ${KEY}`,
+            },
+            signal: controller.signal,
+          }
+        )
+
+        if (!similarResponse.ok) {
+          throw new Error('Failed to fetch similar series')
+        }
+
+        const similarData = await similarResponse.json()
+        setSimilarSeries(similarData.results)
+
+        const videosResponse = await fetch(
+          `${BASE_URL}/tv/${id}/videos`,
+          {
+            headers: {
+              Authorization: `Bearer ${KEY}`,
+            },
+            signal: controller.signal,
+          }
+        )
+
+        if (!videosResponse.ok) {
+          throw new Error('Failed to fetch videos')
+        }
+
+        const videosData = await videosResponse.json()
+
+        const trailer = videosData.results.find(
+          (video) =>
+            video.type === 'Trailer' &&
+            video.site === 'YouTube'
+        )
+
+        setTrailerKey(trailer?.key || null)
+      } catch (error) {
+        if (error.name !== 'AbortError') {
+          setError(error.message)
+        }
+      } finally {
+        if (!controller.signal.aborted) {
+          setLoading(false)
+        }
+      }
+    }
+
+    fetchSeries()
+
+    return () => {
+      controller.abort()
+    }
+  }, [id])
+
+  if (loading) {
+    return (
+      <main className="min-h-screen bg-zinc-950 text-white pt-24 px-4">
+        <p className="text-gray-400">
+          Loading series...
+        </p>
+      </main>
+    )
+  }
+
+  if (error) {
+    return (
+      <main className="min-h-screen bg-zinc-950 text-white pt-24 px-4">
+        <p className="text-red-500">
+          Error: {error}
+        </p>
+      </main>
+    )
+  }
+
+  return (
+    <main className="min-h-screen bg-zinc-950 text-white pt-24 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto">
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+          <div>
+            <img
+              src={`https://image.tmdb.org/t/p/w500${series.poster_path}`}
+              alt={series.name}
+              className="w-full max-w-sm mx-auto rounded-xl shadow-2xl"
+            />
+          </div>
+
+          <div className="md:col-span-2">
+
+            <h1 className="text-4xl sm:text-5xl font-bold">
+              {series.name}
+            </h1>
+
+            <div className="flex flex-wrap items-center gap-4 mt-4">
+
+              <span className="text-yellow-400 font-bold">
+                ⭐ {series.vote_average.toFixed(1)}
+              </span>
+
+              <span className="text-gray-400">
+                {series.first_air_date?.slice(0, 4)}
+              </span>
+
+              <span className="text-gray-400">
+                {series.number_of_seasons} Season{series.number_of_seasons === 1 ? '' : 's'}
+              </span>
+
+              <span className="text-gray-400">
+                {series.number_of_episodes} Episodes
+              </span>
+
+            </div>
+
+            <div className="flex flex-wrap gap-2 mt-5">
+              {series.genres?.map((genre) => (
+                <span
+                  key={genre.id}
+                  className="rounded-full bg-zinc-800 px-3 py-1 text-sm text-gray-300"
+                >
+                  {genre.name}
+                </span>
+              ))}
+            </div>
+
+            <h2 className="text-2xl font-bold mt-8 mb-3">
+              Overview
+            </h2>
+
+            <p className="text-gray-300 leading-7">
+              {series.overview}
+            </p>
+
+            {trailerKey && (
+              <button
+                onClick={() => setShowTrailer(true)}
+                className="mt-6 rounded-lg bg-red-600 px-6 py-3 font-semibold text-white transition hover:bg-red-700"
+              >
+                ▶ Watch Trailer
+              </button>
+            )}
+
+            <h2 className="text-2xl font-bold mt-10 mb-4">
+              Cast
+            </h2>
+
+            <div className="flex gap-4 overflow-x-auto pb-4">
+              {cast.map((person) => (
+                <div
+                  key={person.id}
+                  className="min-w-[120px] w-[120px]"
+                >
+                  <img
+                    src={
+                      person.profile_path
+                        ? `https://image.tmdb.org/t/p/w185${person.profile_path}`
+                        : 'https://via.placeholder.com/185x278?text=No+Image'
+                    }
+                    alt={person.name}
+                    className="w-full aspect-[2/3] object-cover rounded-lg"
+                  />
+
+                  <h3 className="text-sm font-semibold text-white mt-2">
+                    {person.name}
+                  </h3>
+
+                  <p className="text-xs text-gray-400">
+                    {person.character}
+                  </p>
+                </div>
+              ))}
+            </div>
+
+            <h2 className="text-2xl font-bold mt-10 mb-4">
+              Similar Series
+            </h2>
+
+            <div className="flex gap-4 overflow-x-auto pb-6">
+              {similarSeries.slice(0, 10).map((show) => (
+                <div
+                  key={show.id}
+                  className="min-w-[160px] sm:min-w-[190px] md:min-w-[210px]"
+                >
+                  <MovieCard movie={show} />
+                </div>
+              ))}
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+      <TrailerModal
+        videoKey={showTrailer ? trailerKey : null}
+        onClose={() => setShowTrailer(false)}
+      />
+    </main>
+  )
+}
+
+export default SeriesDetail

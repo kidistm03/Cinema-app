@@ -1,4 +1,6 @@
-function SortSelect({ sortBy, onSortChange }) {
+function SortSelect({ sortBy, onSortChange, type = 'movie' }) {
+  const dateField = type === 'tv' ? 'first_air_date' : 'primary_release_date'
+
   return (
     <select
       value={sortBy}
@@ -7,8 +9,8 @@ function SortSelect({ sortBy, onSortChange }) {
     >
       <option value="popularity.desc">Most Popular</option>
       <option value="vote_average.desc">Highest Rated</option>
-      <option value="primary_release_date.desc">Newest</option>
-      <option value="primary_release_date.asc">Oldest</option>
+      <option value={`${dateField}.desc`}>Newest</option>
+      <option value={`${dateField}.asc`}>Oldest</option>
     </select>
   )
 }

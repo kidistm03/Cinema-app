@@ -8,15 +8,25 @@ function Home() {
   const popular = useMovies('/movie/popular')
   const topRated = useMovies('/movie/top_rated')
 
+  const trendingSeries = useMovies('/trending/tv/week')
+  const popularSeries = useMovies('/tv/popular')
+  const topRatedSeries = useMovies('/tv/top_rated')
+
   const isLoading =
     trending.loading ||
     popular.loading ||
-    topRated.loading
+    topRated.loading ||
+    trendingSeries.loading ||
+    popularSeries.loading ||
+    topRatedSeries.loading
 
   const error =
     trending.error ||
     popular.error ||
-    topRated.error
+    topRated.error ||
+    trendingSeries.error ||
+    popularSeries.error ||
+    topRatedSeries.error
 
   if (isLoading) {
     return (
@@ -66,6 +76,21 @@ function Home() {
         <MovieRow
           title="Top Rated Movies"
           movies={topRated.movies}
+        />
+
+        <MovieRow
+          title="Trending Series This Week"
+          movies={trendingSeries.movies}
+        />
+
+        <MovieRow
+          title="Popular Series"
+          movies={popularSeries.movies}
+        />
+
+        <MovieRow
+          title="Top Rated Series"
+          movies={topRatedSeries.movies}
         />
 
       </div>
