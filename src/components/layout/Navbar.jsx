@@ -40,7 +40,7 @@ function Navbar() {
               to="/watchlist"
               className="flex items-center gap-2 text-sm sm:text-base text-gray-300 hover:text-white transition whitespace-nowrap"
             >
-              ❤️ Watchlist
+              Watchlist
 
               <span className="rounded-full bg-red-600 px-2 py-0.5 text-xs font-bold text-white">
                 {watchlist.length}

@@ -14,7 +14,7 @@ function Watchlist() {
 
         {watchlist.length === 0 ? (
           <div className="text-center py-20">
-            <p className="text-5xl mb-4">💔</p>
+            <p className="text-5xl mb-4"></p>
             <p className="text-xl text-gray-400">
               Your watchlist is empty.
             </p>
