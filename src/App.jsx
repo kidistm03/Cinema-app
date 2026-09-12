@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { WatchlistProvider } from './context/WatchlistContext'
 
 import Navbar from './components/layout/Navbar'
 import Footer from './components/layout/Footer'
@@ -12,22 +13,22 @@ import NotFound from './pages/NotFound'
 
 function App() {
   return (
-    <BrowserRouter>
+    <WatchlistProvider>
+      <BrowserRouter>
+        <Navbar />
 
-      <Navbar />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/browse" element={<Browse />} />
+          <Route path="/movie/:id" element={<MovieDetail />} />
+          <Route path="/search" element={<SearchResults />} />
+          <Route path="/watchlist" element={<Watchlist />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
 
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/browse" element={<Browse />} />
-        <Route path="/movie/:id" element={<MovieDetail />} />
-        <Route path="/search" element={<SearchResults />} />
-        <Route path="/watchlist" element={<Watchlist />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-
-      <Footer />
-
-    </BrowserRouter>
+        <Footer />
+      </BrowserRouter>
+    </WatchlistProvider>
   )
 }
 

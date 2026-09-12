@@ -1,13 +1,34 @@
 import { Link } from 'react-router-dom'
+import { useWatchlist } from '../../context/WatchlistContext'
 
 function MovieCard({ movie }) {
   const year = movie.release_date
     ? movie.release_date.slice(0, 4)
     : 'N/A'
+  const {
+    addToWatchlist,
+    removeFromWatchlist,
+    isInWatchlist,
+  } = useWatchlist()
+
+  const saved = isInWatchlist(movie.id)
+
+  function handleWatchlist() {
+    if (saved) {
+      removeFromWatchlist(movie.id)
+    } else {
+      addToWatchlist(movie)
+    }
+  }
 
   return (
     <div className="group relative overflow-hidden rounded-lg bg-zinc-900 transition duration-300 hover:scale-105 hover:shadow-2xl">
-
+      <button
+        onClick={handleWatchlist}
+        className="absolute right-3 top-3 z-20 rounded-full bg-black/70 p-2 text-xl transition hover:scale-110"
+      >
+        {saved ? '❤️' : '🤍'}
+      </button>
       <Link to={`/movie/${movie.id}`}>
         <img
           src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
