@@ -6,8 +6,10 @@ import Toast from '../ui/Toast'
 function MovieCard({ movie }) {
   const [message, setMessage] = useState('')
 
-  const year = movie.release_date
-    ? movie.release_date.slice(0, 4)
+  const title = movie.title || movie.name
+  const date = movie.release_date || movie.first_air_date
+  const year = date
+    ? date.slice(0, 4)
     : 'N/A'
 
   const {
@@ -45,7 +47,7 @@ function MovieCard({ movie }) {
       <Link to={`/movie/${movie.id}`}>
         <img
           src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-          alt={movie.title}
+          alt={title}
           className="w-full aspect-[2/3] object-cover"
         />
 
@@ -53,7 +55,7 @@ function MovieCard({ movie }) {
           <div className="w-full p-4">
 
             <h2 className="text-lg font-bold text-white">
-              {movie.title}
+              {title}
             </h2>
 
             <div className="mt-2 flex items-center justify-between">
